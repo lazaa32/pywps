@@ -15,6 +15,7 @@ LOGGER = logging.getLogger("PYWPS")
 
 MULTIPROCESSING = 'multiprocessing'
 SCHEDULER = 'scheduler'
+DOCKER = 'docker'
 DEFAULT = MULTIPROCESSING
 
 
@@ -29,6 +30,8 @@ def Process(process, wps_request, wps_response):
     LOGGER.info("Processing mode: {}".format(mode))
     if mode == SCHEDULER:
         process = Scheduler(process, wps_request, wps_response)
-    else:
+    elif mode == DOCKER:
+        process = Container(process, wps_request, wps_response)
+    else:    
         process = MultiProcessing(process, wps_request, wps_response)
     return process

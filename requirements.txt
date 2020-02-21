@@ -1,5 +1,6 @@
 alembic
 click
+docker
 jinja2
 jsonschema
 lxml
