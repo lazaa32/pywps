@@ -6,7 +6,7 @@
 import os
 import tempfile
 import pywps.configuration as config
-from pywps import Process, WPSRequest
+from pywps.app import Process, WPSRequest
 from pywps.response.execute import ExecuteResponse
 from pywps.log import get_logger
 

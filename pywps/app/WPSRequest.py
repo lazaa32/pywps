@@ -11,7 +11,7 @@ from pywps import get_ElementMakerForVersion
 import base64
 import datetime
 from pywps.app.basic import get_xpath_ns
-from pywps.inout.inputs import input_from_json
+from pywps.inout import inputs
 from pywps.exceptions import NoApplicableCode, OperationNotSupported, MissingParameterValue, VersionNegotiationFailed, \
     InvalidParameterValue, FileSizeExceeded
 from pywps import configuration
@@ -370,7 +370,7 @@ class WPSRequest(object):
             inpt_defs = value['inputs'][identifier]
 
             for inpt_def in inpt_defs:
-                inpt = input_from_json(inpt_def)
+                inpt = inputs.input_from_json(inpt_def)
 
                 if identifier in self.inputs:
                     self.inputs[identifier].append(inpt)

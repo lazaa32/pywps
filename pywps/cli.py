@@ -11,7 +11,7 @@ import threading
 from werkzeug.serving import run_simple
 from pywps.app.Service import Service
 from pywps import configuration
-from pywps.queue import JobQueueService
+from pywps.jobqueue import JobQueueService
 
 import sqlalchemy
 from alembic.config import Config
@@ -144,3 +144,7 @@ def _drop_db():
     for table in engine.table_names():
         sql = sqlalchemy.text("DROP TABLE IF EXISTS {}".format(table))
         engine.execute(sql)
+
+
+if __name__ == "__main__":
+    cli()
