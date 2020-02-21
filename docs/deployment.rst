@@ -5,7 +5,7 @@ Deployment to a production server
 
 PyWPS consists from two main parts:
 * PyWPS :py:class:`pywps.app.Service` the main process to accept client requests,
-* :py:module:`pywps.queue` responsible for calling the stored requests in the asynchronous mode.
+* :py:mod:`pywps.queue` responsible for calling the stored requests in the asynchronous mode.
 
 --------------
 Service module
@@ -16,9 +16,9 @@ in this case, the Service class will
 
 1. Accept request
 2a. In case, the request is to be executed in *synchronous* mode, it will be
-        directly executed - sync requests are immediately executed.
+directly executed - sync requests are immediately executed.
 2b. In case, the request is to be executed as *asynchronous* mode, request
-    will be stored in to the database.
+will be stored in to the database.
 
 This means: asynchronous requests are not executed by the Service class, they
 will be just stored into database.
@@ -26,7 +26,7 @@ will be just stored into database.
 ------------
 Queue module
 ------------
-The :py:module:`pywps.queue` has a `JobQueueService` to be started separately - it will
+The :py:mod:`pywps.queue` has a `JobQueueService` to be started separately - it will
 start a process, which will periodically check for the database stored
 requests and in case, some process is there, it will removed and executed.
 
