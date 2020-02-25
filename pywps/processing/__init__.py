@@ -6,6 +6,7 @@
 import pywps.configuration as config
 from pywps.processing.basic import MultiProcessing
 from pywps.processing.scheduler import Scheduler
+from pywps.processing.container import Container
 # api only
 from pywps.processing.basic import Processing  # noqa: F401
 from pywps.processing.job import Job  # noqa: F401
