@@ -35,6 +35,10 @@ class Container(Processing):
         self.port = _assign_port()
         self.client = docker.from_env()
         self.cntnr = self._create()
+        if self.job.wps_request.store_execute == 'true' and self.job.wps_request.status == 'true':
+            self.job.process.async_ = True
+        else:
+            self.job.process.async_ = False
 
     def _create(self):
         cntnr_img = config.get_config_value("processing", "docker_img")
@@ -44,7 +48,7 @@ class Container(Processing):
         dckr_out_dir = config.get_config_value("processing", "dckr_out_dir")
         container = self.client.containers.create(cntnr_img, ports={"5000/tcp": self.port}, detach=True,
                                                   volumes={prcs_out_dir: {'bind': dckr_out_dir, 'mode': 'rw'},
-                                                           prcs_inp_dir: {'bind': dckr_inp_dir, 'mode': 'ro'}})
+                                                           prcs_inp_dir: {'bind': dckr_inp_dir, 'mode': 'rw'}})
         return container
 
     def start(self):
@@ -53,7 +57,7 @@ class Container(Processing):
         time.sleep(1)
         self._execute()
 
-        if self.job.process.async:
+        if self.job.process.async_:
             self._parse_status()
             daemon = threading.Thread(target=check_status, args=(self,))
             daemon.start()
@@ -79,11 +83,8 @@ class Container(Processing):
         inputs = get_inputs(self.job.wps_request.inputs)
         output = get_output(self.job.wps_request.outputs)
         wps = WPS(url=url_execute, skip_caps=True)
-        if self.job.process.async:
-            mode = "async"
-        else:
-            mode = "sync"
-        self.execution = wps.execute(self.job.wps_request.identifier, inputs=inputs, output=output, mode=mode)
+        self.execution = wps.execute(self.job.wps_request.identifier, inputs=inputs, output=output,
+                                     mode=self.job.process.async_)
 
     def _parse_outputs(self):
         for output in self.execution.processOutputs:
@@ -98,7 +99,12 @@ class Container(Processing):
         store_status(self.job.wps_response.uuid, self.job.wps_response.status, self.job.wps_response.message)
 
     def _parse_status(self):
-        self.job.process.status_url = self.execution.statusLocation
+        container_status = self.execution.statusLocation.split("/outputs/")[-1]
+        status_url = self.job.process.status_url
+        local_status = status_url.split("/outputs/")[-1]
+        status_location = status_url.replace(local_status, container_status)
+        self.job.process.status_location = status_location
+        # self.job.process.status_location(self.job.process, status_location)
         self.job.wps_response.update_status(message=self.execution.statusMessage)
 
     def dirty_clean(self):

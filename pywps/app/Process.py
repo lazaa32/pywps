@@ -169,6 +169,14 @@ class Process(object):
     @property
     def status_location(self):
         return self.status_store.location(self.status_filename)
+    #
+    # def update_status(self, status_location):
+    #     self.status_location = status_location
+    #     self.status_url = status_location
+    #
+    # @status_location.setter
+    # def status_location(self, value):
+    #     self._status_location = value
 
     @property
     def status_filename(self):
@@ -177,6 +185,10 @@ class Process(object):
     @property
     def status_url(self):
         return self.status_store.url(self.status_filename)
+    #
+    # @status_url.setter
+    # def status_url(self, value):
+    #     self._status_url = value
 
     def _execute_process(self, async_, wps_request, wps_response):
         """Uses :module:`pywps.processing` module for sending process to
